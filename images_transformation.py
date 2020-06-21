@@ -83,12 +83,12 @@ def sharemaker(link):
     return sh1, sh2
 
 
-def Seq_Transforamtion(folders_list):
+def Seq_Transforamtion(folders_list, Results_globale_folder):
     for i in range(len(folders_list)):
-        files_list = os.listdir(os.path.join(Link_globale_folder,folders_list[i]))
-        folder_link = os.path.join(Link_globale_folder,folders_list[i])
-        res_folder_link =os.path.join(Results_globale_folder,folders_list[i])
-        print("{} : {}".format(folders_list[i] , i+1))
+        files_list = os.listdir(os.path.join(Link_globale_folder, folders_list[i]))
+        folder_link = os.path.join(Link_globale_folder, folders_list[i])
+        res_folder_link = os.path.join(Results_globale_folder, folders_list[i])
+        print("{} : {}".format(folders_list[i], i + 1))
         for j in tqdm(range(len(files_list))):
             link = os.path.join(folder_link, files_list[j])
             share1 = sharemaker(link)[0]
@@ -96,4 +96,13 @@ def Seq_Transforamtion(folders_list):
             share1_1_1 = sharemaker(share1_1)[0]
             plt.imsave(os.path.join(res_folder_link, files_list[j]), share1_1_1, cmap=cm.gray)
 
-Seq_Transforamtion(folders)
+
+base_dir = "C:\\Users\\NEW.PC\Desktop\datasets\\2D_images_dataset_FE_no_scale"
+
+
+def creatfolder(base_dir):
+    for i in folders:
+        os.mkdir(os.path.join(base_dir, i))
+
+
+creatfolder(base_dir)

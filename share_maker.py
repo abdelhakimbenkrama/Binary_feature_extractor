@@ -2,7 +2,6 @@ from PIL import Image, ImageDraw
 import matplotlib.pyplot as plt
 import matplotlib.cm as cm
 import numpy as np
-
 import sys
 
 A = "C:/Users/NEW.PC/Desktop/image.jpg"
@@ -104,6 +103,7 @@ def X3_X5_filtre(image, i, j):
         y = 0
     return x, y
 
+
 def traitment():
     image = OpenImage(A)
     width, height = image.shape[0], image.shape[1]
@@ -124,11 +124,6 @@ def traitment():
                 sh2[i, j] = image[i, j]
     plt.imshow(image, cmap='Greys')
     plt.show()
-    # plt.imshow(sh1, cmap='Greys')
-    # plt.show()
-    # plt.imshow(sh2, cmap='Greys')
-    # plt.show()
-    # plt.imsave('C:\\Users\lenovo\Desktop\sh2_2_1.png', sh1, cmap=cm.gray)
-    # plt.imsave('C:\\Users\lenovo\Desktop\sh2_2_2.png', sh2, cmap=cm.gray)
-
-
+    # Save Shares
+    # plt.imsave('Path\sh2_2_1.png', sh1, cmap=cm.gray)
+    # plt.imsave('path\sh2_2_2.png', sh2, cmap=cm.gray)

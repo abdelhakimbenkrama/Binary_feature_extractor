@@ -1,7 +1,7 @@
 import numpy as np
 import os
 import cv2
-from PIL import Image
+from PIL import Image, ImageFile
 import matplotlib.pyplot as plt
 import matplotlib.cm as cm
 from tqdm import tqdm
@@ -9,7 +9,7 @@ from multiprocessing import Pool
 
 Link_globale_folder = "C:\\Users\\NEW.PC\Desktop\datasets\\2D_images_dataset"
 Results_globale_folder = "C:\\Users\\NEW.PC\Desktop\datasets\\2D_images_dataset_FE"
-SCALE_PERCENT = 75
+ImageFile.LOAD_TRUNCATED_IMAGES = True
 
 folders = ['accordion', 'airplanes', 'anchor', 'ant', 'BACKGROUND_Google', 'barrel', 'bass',
            'beaver', 'binocular', 'bonsai', 'brain', 'brontosaurus', 'buddha', 'butterfly',
@@ -30,12 +30,7 @@ folders = ['accordion', 'airplanes', 'anchor', 'ant', 'BACKGROUND_Google', 'barr
 
 
 def open_image(link):
-    img = cv2.imread(link, cv2.IMREAD_GRAYSCALE)
-    width = int(img.shape[1] * SCALE_PERCENT / 100)
-    height = int(img.shape[0] * SCALE_PERCENT / 100)
-    dim = (width, height)
-    resized = cv2.resize(img, dim, interpolation=cv2.IMREAD_GRAYSCALE)
-    image = Image.fromarray(resized)
+    image = Image.open(link)
     image = image.convert('1')
     image = np.asarray(image)
     return image
@@ -94,14 +89,15 @@ def transform(files, files_res):
             share1_1_1 = sharemaker(share1_1)[0]
             plt.imsave(os.path.join(Results_globale_folder, files[i]), share1_1_1, cmap=cm.gray)
 
+
 def fen(folders_list):
-    start =1
-    end =10
-    for i in range(start,end):
-        files_list = os.listdir(os.path.join(Link_globale_folder,folders_list[i]))
-        folder_link = os.path.join(Link_globale_folder,folders_list[i])
-        res_folder_link =os.path.join(Results_globale_folder,folders_list[i])
-        print("{} : {}".format(folders_list[i] , i+1))
+    start = 1
+    end = 10
+    for i in range(start, end):
+        files_list = os.listdir(os.path.join(Link_globale_folder, folders_list[i]))
+        folder_link = os.path.join(Link_globale_folder, folders_list[i])
+        res_folder_link = os.path.join(Results_globale_folder, folders_list[i])
+        print("{} : {}".format(folders_list[i], i + 1))
         for j in tqdm(range(len(files_list))):
             link = os.path.join(folder_link, files_list[j])
             share1 = sharemaker(link)[0]
@@ -109,23 +105,32 @@ def fen(folders_list):
             share1_1_1 = sharemaker(share1_1)[0]
             plt.imsave(os.path.join(res_folder_link, files_list[j]), share1_1_1, cmap=cm.gray)
 
-#index represent the position in files list THIS PART NEED AUTOMATION
-index = 101
-files_list = os.listdir(os.path.join(Link_globale_folder, folders[index]))
 
-def process_image(image_name):
+# index represent the position in files list THIS PART NEED AUTOMATION
+
+Results_globale_folder = "C:\\Users\\NEW.PC\Desktop\datasets\\2D_images_dataset_FE_no_scale"
+
+from functools import partial
+
+
+def process_image(image_name, index):
     folder_link = os.path.join(Link_globale_folder, folders[index])
     res_folder_link = os.path.join(Results_globale_folder, folders[index])
-    link = os.path.join(folder_link,image_name)
+    link = os.path.join(folder_link, image_name)
     share1 = sharemaker(link)[0]
     share1_1 = sharemaker(share1)[0]
     share1_1_1 = sharemaker(share1_1)[0]
     plt.imsave(os.path.join(res_folder_link, image_name), share1_1_1, cmap=cm.gray)
+
+
 def main():
-    pool = Pool()
-    for _ in tqdm(pool.imap_unordered(process_image, files_list), total=len(files_list)):
-        pass
-    pool.close()
+    for i in range(101):
+        files_list = os.listdir(os.path.join(Link_globale_folder, folders[i]))
+        pool = Pool()
+        for _ in tqdm(pool.imap_unordered(partial(process_image, index=i), files_list), total=len(files_list)):
+            pass
+        pool.close()
+
 
 if __name__ == '__main__':
     main()
